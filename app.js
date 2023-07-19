@@ -6,6 +6,14 @@ var logger = require('morgan');
 var hbs = require('express-handlebars')
 const hbsmodule = require('hbs');
 const fileUpload = require('express-fileupload');
+var db = require('./config/connection')
+
+db.connect((err)=>{
+  if(err)
+  console.log('Database Connection Error') + err
+  else
+  console.log('Database Connected Successfully')
+})
 
 
 var userRouter = require('./routes/user');
