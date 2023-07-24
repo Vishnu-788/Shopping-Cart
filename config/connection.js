@@ -1,22 +1,28 @@
-const mongoClient = require('mongodb').MongoClient
+const { MongoClient } = require('mongodb');
+
 const state = {
-    db:null
-}
+  db: null,
+};
 
-module.exports.connect = function(done){
-    const url ='mongodb://localhost:27017'
-    const dbname = 'shopping'
+module.exports.connect = function (done) {
+  const url = 'mongodb://127.0.0.1:27017';
+  const dbname = 'shopping';
 
-    mongoClient.connect(url,(err,data)=>{
-        if(err) return done(err)
-        state.db=data.db(dbname)
-        done()
-    })
+  const client = new MongoClient(url, { useUnifiedTopology: true });
 
-   
-}
+  client.connect((err) => {
+    if (err) {
+      return done(err);
+    }
 
-module.exports.get = function(){
-    return state.db
-}
+    state.db = client.db(dbname);
+    console.log('Connected to the MongoDB server.');
+    done();
+  });
+};
+
+module.exports.get = function () {
+  return state.db;
+};
+
 
