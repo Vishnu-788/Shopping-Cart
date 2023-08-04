@@ -7,6 +7,7 @@ var hbs = require('express-handlebars')
 const hbsmodule = require('hbs');
 const fileUpload = require('express-fileupload');
 var db = require('./config/connection')
+var session = require('express-session')
 
 db.connect((err)=>{
   if(err)
@@ -31,6 +32,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileUpload())
+app.use(session({secret:"key",cookie:{maxAge:60000}}))
 
 
 app.use('/', userRouter);
