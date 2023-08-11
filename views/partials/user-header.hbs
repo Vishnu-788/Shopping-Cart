@@ -11,31 +11,34 @@
                     <a class="nav-link" href="/">Products <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Cart</a>
+                    <a class="nav-link" href="/cart">Cart</a>
                 </li>
+                {{#if user}}
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Cart</a>
+                    <a class="nav-link" href="#">Orders</a>
                 </li>
+                {{/if}}
+
 
             </ul>
             <div class="dropdown show">
                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{#if user}}
-                        {{user.Name}}
+                    {{user.Name}}
                     {{else}}
-                        Account
+                    Account
                     {{/if}}
                 </a>
 
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                     {{#if user}}
-                        <a class="dropdown-item" href="/logout">Logout</a>
+                    {{#if user}}
+                    <a class="dropdown-item" href="/logout">Logout</a>
                     {{else}}
-                         <a class="dropdown-item" href="/login">Login</a>
+                    <a class="dropdown-item" href="/login">Login</a>
                     {{/if}}
-                   
-                   
+
+
                 </div>
             </div>
             </form>
