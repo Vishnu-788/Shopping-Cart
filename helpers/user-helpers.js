@@ -49,7 +49,7 @@ module.exports = {
                 let proExist = userCart.products.findIndex(product => product.item == proId)
                 console.log(proExist)
                 if(proExist != -1){
-                    db.get().collection(collections.CART_COLLECTION).updateOne({'products.item':objectId(proId)},
+                    db.get().collection(collections.CART_COLLECTION).updateOne({user:objectId(userId),'products.item':objectId(proId)},
                     {
                         $inc:{'products.$.quantity':1}
                     }).then((response)=>{
@@ -101,6 +101,13 @@ module.exports = {
                     foreignField:'_id',
                     as:'products'
                 }
+               },
+               {
+                $project:{
+                    item:1,
+                    quantity:1,
+                    product: { $arrayElemAt: ["$products",0]}
+                }
                }
                //Previously used this code Use if for understanding mongoDB deeply
             //    {
@@ -133,5 +140,17 @@ module.exports = {
             }
             resolve(count)
         })
-    }
+    },
+    changeProductQuantity:((details)=>{
+        details.count = parseInt(details.count)
+        return new Promise ((resolve,reject)=>{
+            db.get().collection(collections.CART_COLLECTION).updateOne({_id:objectId(details.cart),'products.item':objectId(details.product)},
+            {
+                $inc:{'products.$.quantity':details.count}
+            }).then((response)=>{
+                resolve();
+            })
+           
+        })
+    })
 }
