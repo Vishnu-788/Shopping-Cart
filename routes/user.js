@@ -77,7 +77,11 @@ router.get("/add-to-cart/:id",verifyLogin,(req,res)=>{
 
 router.post('/change-product-quantity',(req,res)=>{
   userHelpers.changeProductQuantity(req.body).then(()=>{
-    
+    resObject ={
+      count:req.body.count,
+      proId:req.body.product
+    }
+     res.json(resObject)
   })
 })
 

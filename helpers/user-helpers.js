@@ -147,7 +147,7 @@ module.exports = {
             db.get().collection(collections.CART_COLLECTION).updateOne({_id:objectId(details.cart),'products.item':objectId(details.product)},
             {
                 $inc:{'products.$.quantity':details.count}
-            }).then((response)=>{
+            }).then(()=>{
                 resolve();
             })
            
