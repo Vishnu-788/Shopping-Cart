@@ -4,7 +4,7 @@ const state = {
   db: null,
 };
 
-module.exports.connect = function (done) {
+module.exports.connect = function (done) { // this is where the connection method is defined
   const url = 'mongodb://127.0.0.1:27017';
   const dbname = 'shopping';
 

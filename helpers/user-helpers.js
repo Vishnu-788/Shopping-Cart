@@ -38,19 +38,100 @@ module.exports = {
         })
     },
     addToCart:(proId,userId)=>{
+        let proObj = {
+            item:objectId(proId),
+            quantity:1
+
+        }
         return new Promise( async (resolve,reject)=>{
             let userCart = await db.get().collection(collections.CART_COLLECTION).findOne({user:objectId(userId)})
             if(userCart){
-                console.log('if case worked')
+                let proExist = userCart.products.findIndex(product => product.item == proId)
+                console.log(proExist)
+                if(proExist != -1){
+                    db.get().collection(collections.CART_COLLECTION).updateOne({'products.item':objectId(proId)},
+                    {
+                        $inc:{'products.$.quantity':1}
+                    }).then((response)=>{
+                        resolve();
+                    })
+                }else{
+                    db.get().collection(collections.CART_COLLECTION)
+                    .updateOne({user:objectId(userId)},
+                    {
+                    
+                        $push:{products:proObj}
+                        
+                    }
+                    ).then((response)=>{
+                        resolve();
+                    })
+                }
+             
             }else{
                 let cartObj = {
                     user:objectId(userId),
-                    products:[objectId(proId)]
+                    products:[proObj]
                 }
                 db.get().collection(collections.CART_COLLECTION).insertOne(cartObj).then((response)=>{
                     resolve()
                 })
             }
+        })
+    },
+    getCartProducts:(userId)=>{
+        return new Promise( async (resolve,reject)=>{
+            let cartItems = await db.get().collection(collections.CART_COLLECTION).aggregate([
+               {
+                  $match:{user:objectId(userId)}
+               },
+               {
+                $unwind:'$products'
+               },
+               {
+                $project:{
+                    item:'$products.item',
+                    quantity:'$products.quantity'
+                }
+               },
+               {
+                $lookup:{
+                    from:collections.PRODUCT_COLLECTION,
+                    localField:'item',
+                    foreignField:'_id',
+                    as:'products'
+                }
+               }
+               //Previously used this code Use if for understanding mongoDB deeply
+            //    {
+            //       $lookup:{
+            //         from:collections.PRODUCT_COLLECTION,
+            //         let:{proList:'$products'},
+            //         pipeline:[
+            //             {
+            //                 $match:{
+            //                     $expr:{
+            //                         $in:['$_id','$$proList']
+            //                     }
+            //                 }
+            //             }
+            //         ],
+            //         as:'cartItems'
+            //       } 
+            //    }
+            ]).toArray()
+            resolve(cartItems)
+        })
+    },
+    getCartcount:(userId)=>{
+        return new Promise(async(resolve,reject)=>{
+            let cart = await db.get().collection(collections.CART_COLLECTION).findOne({user:objectId(userId)})
+            if(cart){
+                 count = cart.products.length
+            }else{
+                count=0
+            }
+            resolve(count)
         })
     }
 }

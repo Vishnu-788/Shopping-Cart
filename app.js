@@ -9,7 +9,7 @@ const fileUpload = require('express-fileupload');
 var db = require('./config/connection')
 var session = require('express-session')
 
-db.connect((err)=>{
+db.connect((err)=>{ // This where connection is established
   if(err)
   console.log('Database Connection Error' + err) 
   else
