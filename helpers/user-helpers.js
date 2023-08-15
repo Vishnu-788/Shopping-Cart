@@ -152,5 +152,16 @@ module.exports = {
             })
            
         })
-    })
+    }),
+    removeButton:(data,userId)=>{
+        console.log(data)
+        return new Promise(async(resolve,reject)=>{
+            db.get().collection(collections.CART_COLLECTION).updateOne({user:objectId(userId)},
+            {
+                $pull:{ products : {item : objectId(data.productId)} }
+            }).then((response)=>{
+                resolve();
+            })
+        })
+    }
 }

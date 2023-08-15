@@ -10,7 +10,7 @@
             </thead>
             <tbody>
                 {{#each products}}
-                <tr>
+                <tr id="product-{{this.product._id}}">
 
                     <td><img style="width:70px;height:70px" src="/product-images/{{this.product._id}}.jpg" alt=""></td>
                     <td>{{this.product.Name}}</td>
@@ -22,7 +22,8 @@
                             class="cart-item-count ml-3"
                             onclick="changeQuantity('{{this.product._id}}','{{this._id}}',-1)">-</button>
                     </td>
-                    <td href="#" class="btn btn-danger">Remove</td>
+                    <td class="btn btn-danger" onclick="removeButton('{{this.product._id}}')">Remove</td>
+
                 </tr>
                 {{/each}}
             </tbody>
@@ -54,4 +55,7 @@
             }
         })
     }
+
+  
+
 </script>

@@ -84,6 +84,11 @@ router.post('/change-product-quantity',(req,res)=>{
      res.json(resObject)
   })
 })
+router.get("/remove-item",(req,res)=>{
+  userHelpers.removeButton(req.query,req.session.user._id).then(()=>{
+    res.send("Item removed")
+  })
+})
 
 
 module.exports = router;
