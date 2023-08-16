@@ -17,10 +17,19 @@
 
                     <td>
                         <button class="cart-item-count mr-3"
-                            onclick="changeQuantity('{{this.product._id}}','{{this._id}}',1)">+</button><label
-                            id="product-count-{{this.product._id}}">{{this.quantity}}</label><button
-                            class="cart-item-count ml-3"
-                            onclick="changeQuantity('{{this.product._id}}','{{this._id}}',-1)">-</button>
+                            onclick="changeQuantity('{{this.product._id}}','{{this._id}}',1)">
+                            +
+                        </button>
+                        <label id="product-count-{{this.product._id}}">
+                            {{this.quantity}}
+                        </label>
+                        
+                        <button class="cart-item-count ml-3"
+                            onclick="changeQuantity('{{this.product._id}}','{{this._id}}',-1)"
+                            id="decBtn-{{this.product._id}}">
+                            -
+                        </button>
+                        
                     </td>
                     <td class="btn btn-danger" onclick="removeButton('{{this.product._id}}')">Remove</td>
 
@@ -42,20 +51,25 @@
             },
             method: 'post',
             success: (response) => {
+                let id = 'decBtn-' + proId
+                document.getElementById(id).disabled = false;
                 let currentProductCount = $('#product-count' + '-' + response.proId).html()
                 console.log(response.count)
                 if (response.count === 1) {
-                    console.log("+1")
                     currentProductCount = parseInt(currentProductCount) + 1
                 } else {
-                    console.log("-1")
                     currentProductCount = parseInt(currentProductCount) - 1
                 }
                 $('#product-count' + '-' + response.proId).html(currentProductCount)
+                if (currentProductCount === 1) {
+                    
+                    // Handle the response on success
+                    document.getElementById(id).disabled = true;
+                }
             }
         })
     }
 
-  
+
 
 </script>

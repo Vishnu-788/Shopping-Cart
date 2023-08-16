@@ -23,7 +23,6 @@ function removeButton(proId){
         method:'get',
         success: (response) => {
             let id = 'product-' + proId
-            console.log(id)
             // Handle the response on success
             document.getElementById(id).remove();
             alert('Item removed');

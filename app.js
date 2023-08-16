@@ -8,6 +8,7 @@ const hbsmodule = require('hbs');
 const fileUpload = require('express-fileupload');
 var db = require('./config/connection')
 var session = require('express-session')
+var handleBars = require('handlebars');
 
 db.connect((err)=>{ // This where connection is established
   if(err)
@@ -16,6 +17,12 @@ db.connect((err)=>{ // This where connection is established
   console.log('Database Connected Successfully')
 })
 
+handleBars.registerHelper('greaterThan',function(a,options){
+  if(a > 1){
+      return options.fn(this)
+  }
+  return options.inverse(this)
+})
 
 var userRouter = require('./routes/user');
 var adminRouter = require('./routes/admin');
