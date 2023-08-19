@@ -12,18 +12,20 @@ function addToCart(proId){
     })
 }
 
-function removeButton(proId){
+function removeButton(proId,userId){
     console.log('button call worked')
     console.log(proId)
     $.ajax({
         url:"/remove-item",
         data:{
-            productId:proId
+            productId:proId,
+            user:userId
         },
         method:'get',
         success: (response) => {
             let id = 'product-' + proId
             // Handle the response on success
+            document.getElementById('total').innerHTML= response.total
             document.getElementById(id).remove();
             alert('Item removed');
         },

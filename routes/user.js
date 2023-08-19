@@ -76,7 +76,6 @@ router.get("/add-to-cart/:id",verifyLogin,(req,res)=>{
 })
 
 router.post('/change-product-quantity',(req,res)=>{
-  console.log(req.body)
   userHelpers.changeProductQuantity(req.body).then(async()=>{
     let total = await userHelpers.getTotalAmount(req.body.user)
     resObject ={
@@ -88,16 +87,29 @@ router.post('/change-product-quantity',(req,res)=>{
   })
 })
 router.get("/remove-item",(req,res)=>{
-  userHelpers.removeButton(req.query,req.session.user._id).then(()=>{
-    res.send("Item removed")
+  userHelpers.removeButton(req.query).then(async()=>{
+    let total = await userHelpers.getTotalAmount(req.query.user)
+    console.log(total)
+   res.json({total})
+    
   })
 })
 
 router.get('/place-order',verifyLogin,async(req,res)=>{
   console.log(req.session.user._id)
   let total = await userHelpers.getTotalAmount(req.session.user._id)
-  res.render('user/place-order',{total})
+  res.render('user/place-order',{total,user: req.session.user})
 })
 
+router.post('/place-order',async(req,res)=>{
+  let products = await userHelpers.getCartProductList(req.body.userId)
+  let total = await userHelpers.getTotalAmount(req.body.userId)
+  userHelpers.placeOrder(req.body,products,total).then((response)=>{
+    res.json({status:true})
+  }).catch((error)=>{
+    console.log(error)
+    console.log("Error in the route");
+  })
+})
 
 module.exports = router;

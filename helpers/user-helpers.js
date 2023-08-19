@@ -137,10 +137,9 @@ module.exports = {
            
         })
     }),
-    removeButton:(data,userId)=>{
-        console.log(data)
+    removeButton:(data)=>{
         return new Promise(async(resolve,reject)=>{
-            db.get().collection(collections.CART_COLLECTION).updateOne({user:objectId(userId)},
+            db.get().collection(collections.CART_COLLECTION).updateOne({user:objectId(data.user)},
             {
                 $pull:{ products : {item : objectId(data.productId)} }
             }).then((response)=>{
@@ -188,6 +187,37 @@ module.exports = {
             ]).toArray()
             console.log(total)
             resolve(total[0].total)
+        })
+    },
+    placeOrder:(order,products,total)=>{
+        return new Promise((resolve,reject)=>{
+            let status = order['payment-method'] === 'COD'?'placed':'payment'
+            let ordObj = {
+                deliveryDetails:{
+                    mobile:order.Mobile,
+                    address:order.Address,
+                    pinCode:order.Pincode
+                },
+                userId:objectId(order.userId),
+                paymentMethod:order['payment-method'],
+                products:products,
+                totalAmount:total,
+                status:status,
+                data:new Date()
+            }
+            db.get().collection(collections.ORDER_COLLECTION).insertOne(ordObj).then(()=>{
+                db.get().collection(collections.CART_COLLECTION).removeOne({user:objectId(order.userId)})
+                resolve()
+            })
+        }).catch((error)=>{
+           reject(error)
+            
+        })
+    },
+    getCartProductList:(userId)=>{
+        return new Promise(async(resolve,reject)=>{
+            let cart = await db.get().collection(collections.CART_COLLECTION).findOne({user:objectId(userId)})
+            resolve(cart.products)
         })
     }
 }
