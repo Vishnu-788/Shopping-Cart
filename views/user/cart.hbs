@@ -14,10 +14,11 @@
 
                     <td><img style="width:70px;height:70px" src="/product-images/{{this.product._id}}.jpg" alt=""></td>
                     <td>{{this.product.Name}}</td>
+                    
 
                     <td>
                         <button class="cart-item-count mr-3"
-                            onclick="changeQuantity('{{this.product._id}}','{{this._id}}',1)">
+                            onclick="changeQuantity('{{this.product._id}}','{{this._id}}','{{../user}}',1)">
                             +
                         </button>
                         <label id="product-count-{{this.product._id}}">
@@ -25,7 +26,7 @@
                         </label>
                         
                         <button class="cart-item-count ml-3"
-                            onclick="changeQuantity('{{this.product._id}}','{{this._id}}',-1)"
+                            onclick="changeQuantity('{{this.product._id}}','{{this._id}}','{{../user}}',-1)"
                             id="decBtn-{{this.product._id}}">
                             -
                         </button>
@@ -37,20 +38,30 @@
                 {{/each}}
             </tbody>
         </table>
+        <div class="float-right">
+            <h4>Total Price: Rs.<span id="total">{{total}}</span></h4>
+            <a href="/place-order" class="btn btn-success mt-3" style="width: 100%">Place order</a>
+
+        </div>
     </div>
 </section>
 
 <script>
-    function changeQuantity(proId, cartId, count) {
+    function changeQuantity(proId, cartId, userId, count) {
         $.ajax({
             url: '/change-product-quantity',
             data: {
                 cart: cartId,
                 product: proId,
-                count: count
+                count: count,
+                user:userId
+                
             },
             method: 'post',
             success: (response) => {
+
+                document.getElementById('total').innerHTML=response.total
+
                 let id = 'decBtn-' + proId
                 document.getElementById(id).disabled = false;
                 let currentProductCount = $('#product-count' + '-' + response.proId).html()

@@ -109,23 +109,7 @@ module.exports = {
                     product: { $arrayElemAt: ["$products",0]}
                 }
                }
-               //Previously used this code Use if for understanding mongoDB deeply
-            //    {
-            //       $lookup:{
-            //         from:collections.PRODUCT_COLLECTION,
-            //         let:{proList:'$products'},
-            //         pipeline:[
-            //             {
-            //                 $match:{
-            //                     $expr:{
-            //                         $in:['$_id','$$proList']
-            //                     }
-            //                 }
-            //             }
-            //         ],
-            //         as:'cartItems'
-            //       } 
-            //    }
+             
             ]).toArray()
             resolve(cartItems)
         })
@@ -162,6 +146,48 @@ module.exports = {
             }).then((response)=>{
                 resolve();
             })
+        })
+    },
+    getTotalAmount:(userId)=>{
+        return new Promise( async (resolve,reject)=>{
+            let total = await db.get().collection(collections.CART_COLLECTION).aggregate([
+               {
+                  $match:{user:objectId(userId)}
+               },
+               {
+                $unwind:'$products'
+               },
+               {
+                $project:{
+                    item:'$products.item',
+                    quantity:'$products.quantity'
+                }
+               },
+               {
+                $lookup:{
+                    from:collections.PRODUCT_COLLECTION,
+                    localField:'item',
+                    foreignField:'_id',
+                    as:'products'
+                }
+               },
+               {
+                $project:{
+                    item:1,
+                    quantity:1,
+                    product: { $arrayElemAt: ["$products",0]}
+                }
+               },
+              {
+                $group:
+                {
+                    _id:null,
+                    total:{$sum:{$multiply:['$quantity','$product.Price']}}
+                }
+              }
+            ]).toArray()
+            console.log(total)
+            resolve(total[0].total)
         })
     }
 }
