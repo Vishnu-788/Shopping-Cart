@@ -1,0 +1,32 @@
+<section>
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scaope="col">Date</th>
+                    <th scaope="col">Address</th>
+                    <th scaope="col">Pin code</th>
+                    <th scaope="col">Mobile</th>
+                    <th scaope="col">Amount</th>
+                    <th scaope="col">Payment</th>
+                    <th scaope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each orders}}
+                <tr>
+                    <td>{{this.data}}</td>
+                    <td>{{this.deliveryDetails.address}}</td>
+                    <td>{{this.deliveryDetails.pinCode}}</td>
+                    <td>{{this.deliveryDetails.mobile}}</td>
+                    <td>{{this.totalAmount}}</td>
+                    <td>{{this.paymentMethod}}</td>
+                    <td>{{this.status}}</td>
+                    <td><a class="btn btn-primary" href="/view-order-product/{{this._id}}">View Product</a></td>
+                </tr>
+                
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</section>

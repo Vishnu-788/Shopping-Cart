@@ -60,6 +60,10 @@
                 data:$('#checkout-form').serialize(),
                 success:(response)=>{
                     alert(response)
+                    console.log(response.status)
+                    if(response.status){
+                       location.href='/order-success'
+                    }
                 }
             })
         })

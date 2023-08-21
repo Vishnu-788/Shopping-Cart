@@ -105,11 +105,30 @@ router.post('/place-order',async(req,res)=>{
   let products = await userHelpers.getCartProductList(req.body.userId)
   let total = await userHelpers.getTotalAmount(req.body.userId)
   userHelpers.placeOrder(req.body,products,total).then((response)=>{
+
+
     res.json({status:true})
+
   }).catch((error)=>{
     console.log(error)
     console.log("Error in the route");
   })
+})
+
+router.get('/order-success',(req,res)=>{
+  res.render('user/success',{user:req.session.user})
+})
+
+router.get('/orders',async(req,res)=>{
+  let orders = await userHelpers.getcartOrdersHistory(req.session.user._id)
+  res.render('user/orders',{user:req.session.user,orders})
+  
+})
+router.get('/view-order-product/:id',async(req,res)=>{
+  let orderId = req.params.id
+  let products = await userHelpers.getOrderProducts(orderId)
+  console.log(products);
+  res.render('user/orderedProducts',{user:req.session.user,products})
 })
 
 module.exports = router;
