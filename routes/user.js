@@ -48,7 +48,7 @@ router.post('/login',(req,res)=>{
   userHelpers.doLogin(req.body).then((response)=>{
     //This is for creating a session for the user
     if(response.status){
-      req.session.loggedIn=true
+      req.session.user.loggedIn=true
       req.session.user = response.user
       res.redirect('/')
     }else{
@@ -64,7 +64,10 @@ router.get('/logout',(req,res)=>{
 
 router.get('/cart',verifyLogin,async (req,res)=>{
   let products = await userHelpers.getCartProducts(req.session.user._id)
-  let total = await userHelpers.getTotalAmount(req.session.user._id)
+  let total = 0
+  if(products.length > 0){
+    total = await userHelpers.getTotalAmount(req.session.user._id)
+  }
   res.render('user/cart',{products,user:req.session.user._id,total})
 })
 
@@ -104,10 +107,17 @@ router.get('/place-order',verifyLogin,async(req,res)=>{
 router.post('/place-order',async(req,res)=>{
   let products = await userHelpers.getCartProductList(req.body.userId)
   let total = await userHelpers.getTotalAmount(req.body.userId)
-  userHelpers.placeOrder(req.body,products,total).then((response)=>{
-
-
-    res.json({status:true})
+  userHelpers.placeOrder(req.body,products,total).then((orderId)=>{
+    if(req.body['payment-method'] == 'COD'){
+      console.log("Ifcase worked");
+      res.json({codSuccess:true,total})
+      
+    }else{
+      userHelpers.generateRazorpay(orderId,total).then((response)=>{
+        res.json(response)
+      })
+    }
+    
 
   }).catch((error)=>{
     console.log(error)
@@ -129,6 +139,19 @@ router.get('/view-order-product/:id',async(req,res)=>{
   let products = await userHelpers.getOrderProducts(orderId)
   console.log(products);
   res.render('user/orderedProducts',{user:req.session.user,products})
+})
+
+router.post('/verify-payment',(req,res)=>{
+  console.log(req.body)
+  userHelpers.verifyPayment(req.body).then(()=>{
+    userHelpers.changeOrderStatus(req.body['order[receipt]']).then(()=>{
+      console.log("payment success");
+      res.json({status:true})
+    })
+  }).catch((err)=>{
+    console.log(err)
+    res.json({status:false})
+  })
 })
 
 module.exports = router;
