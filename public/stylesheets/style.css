@@ -1,0 +1,31 @@
+body{
+    background-color: #caf0f8;
+}
+
+
+.nav-bg{
+    background-color: #90e0ef;
+}
+.elements{
+    margin-left: 1rem;
+}
+
+.admin-border{
+    border-width: 5px;
+}
+
+
+#myDIV{
+    width: 100%;
+    height: 20rem;
+    border: 5px solid;
+    border-width: thick;
+    padding: 2rem;
+    border-color: #90e0ef;
+}
+
+.navbar{
+    background-color: #90E0EF;
+}
+
+  

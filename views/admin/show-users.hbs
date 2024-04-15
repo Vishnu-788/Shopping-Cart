@@ -1,0 +1,33 @@
+<section>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    {{#each users}}
+                    <div class="card mt-1">
+                        <div class="d-flex">
+                            <div class="mr-auto p-2">
+                                <h5 class="card-header"> User Name : {{this.Name}}</h5>
+                            </div>
+                            <div class="p-2"><a class="card-text">orders<span
+                                        class="badge badge-primary mr-5">{{this.orderCount}}</span></a></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="mr-auto p-2"><p class="card-text">User Email : {{this.Email}}
+                            </p></div>
+                                <div class="p-2">Placed <span
+                                        class="badge badge-primary ml-2">{{this.placedOrders}}</span></div>
+                                <div class="p-2">Pending<span
+                                        class="badge badge-primary ml-2">{{this.unplacedOrders}}</span></div>
+                            </div>
+                            
+
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -210,7 +210,7 @@ module.exports = {
                 products:products,
                 totalAmount:total,
                 status:status,
-                data:new Date()
+                date:new Date()
             }
             db.get().collection(collections.ORDER_COLLECTION).insertOne(ordObj).then((response)=>{
                 db.get().collection(collections.CART_COLLECTION).removeOne({user:objectId(order.userId)})

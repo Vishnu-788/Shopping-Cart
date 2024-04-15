@@ -1,0 +1,28 @@
+<section>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th scaope="col">Date</th>
+                <th scaope="col">Name</th>
+                <th scaope="col">Amount</th>
+                <th scaope="col">Payment</th>
+                <th scaope="col">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each orders}}
+            <tr>
+                <td>{{this.date}}</td>
+                <td>{{this.userName}}</td>
+                <td>{{this.totalAmount}}</td>
+                <td>{{this.paymentMethod}}</td>
+                <td>{{this.status}}</td>
+                <td><a class="btn btn-primary" href="/admin/view-order-product/{{this._id}}">View Product</a></td>
+            </tr>
+            {{/each}}
+        
+        </tbody>
+    </table>
+    
+</section>
